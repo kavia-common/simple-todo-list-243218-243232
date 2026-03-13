@@ -1,82 +1,114 @@
-# Lightweight React Template for KAVIA
+# Retro Todo (React)
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A lightweight, retro-styled todo list application built with React. It supports adding, completing, deleting, filtering, and searching todos, and it persists your list locally in the browser using `localStorage`.
 
 ## Features
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+This app currently implements the following functionality:
 
-## Getting Started
+- It lets you add new todos using the input form.
+- It lets you toggle a todo between complete and incomplete using the checkbox.
+- It lets you delete a todo using the delete button.
+- It lets you filter the visible list by **All**, **Active**, or **Completed**.
+- It lets you search visible todos by text using a search input.
+- It persists todos in the browser using `localStorage`, so the list is still there after refresh.
+- It includes a small loading/empty-status component to provide user feedback when the list is empty or filtered to no results.
+
+## Requirements
+
+- Node.js and npm (any modern LTS version should work).
+
+## Setup and Run
+
+From the React app directory:
+
+```bash
+cd simple-todo-list-243218-243232/frontend_react_app
+npm install
+npm start
+```
+
+Then open:
+
+- http://localhost:3000
+
+## How to Use the UI
+
+When the app loads, you will see the header **Retro Todo** and a badge that shows how many todos are still not completed.
+
+### Add a todo
+
+Type into the "What needs doing?" input and either:
+
+- Press **Enter**, or
+- Click **Add**
+
+The input validates that the todo is not empty and is within the maximum length supported by the UI.
+
+### Mark complete / incomplete
+
+Click the checkbox on a todo to toggle its completion state. Completed items are shown with a struck-through style.
+
+### Search todos
+
+Use the search input to filter the currently visible todos by a text query. The search applies on top of the active filter (All/Active/Completed).
+
+### Filter the list
+
+Use the filter chips:
+
+- **All** shows all items
+- **Active** shows incomplete items
+- **Completed** shows completed items
+
+### Clear completed
+
+Click **Clear completed** to remove all completed todos from the list. The button is disabled when there are no completed items.
+
+### Delete a todo
+
+Click the delete button on the right side of a todo to remove it.
+
+## Data Persistence
+
+Todos are stored locally in the browser via `localStorage` using a fixed storage key:
+
+- `kavia.todos.v1`
+
+If `localStorage` is unavailable (for example, due to browser privacy settings), the app will still function, but your list may not persist across refreshes.
+
+## Available Scripts
 
 In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the app in development mode.
 
 ### `npm test`
 
-Launches the test runner in interactive watch mode.
+Runs the test runner (Create React App / `react-scripts test`).
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production into the `build/` folder.
 
-## Customization
+## Configuration (Environment Variables)
 
-### Colors
+This project may be deployed in an environment that defines React-prefixed environment variables (for example, `REACT_APP_*`). The current todo app implementation runs fully client-side and does not require backend configuration to work.
 
-The main brand colors are defined as CSS variables in `src/App.css`:
+If you deploy in a platform that injects the following variables, they are safe to leave unset for local development unless you add API integration later:
 
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
-
-### Components
-
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `REACT_APP_API_BASE`
+- `REACT_APP_BACKEND_URL`
+- `REACT_APP_FRONTEND_URL`
+- `REACT_APP_WS_URL`
+- `REACT_APP_NODE_ENV`
+- `REACT_APP_NEXT_TELEMETRY_DISABLED`
+- `REACT_APP_ENABLE_SOURCE_MAPS`
+- `REACT_APP_PORT`
+- `REACT_APP_TRUST_PROXY`
+- `REACT_APP_LOG_LEVEL`
+- `REACT_APP_HEALTHCHECK_PATH`
+- `REACT_APP_FEATURE_FLAGS`
+- `REACT_APP_EXPERIMENTS_ENABLED`
