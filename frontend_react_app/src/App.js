@@ -3,6 +3,7 @@ import "./App.css";
 import TodoForm from "./components/TodoForm";
 import FilterBar from "./components/FilterBar";
 import TodoList from "./components/TodoList";
+import StatusState from "./components/StatusState";
 import { loadTodos, saveTodos } from "./utils/storage";
 
 const FILTERS = /** @type {const} */ (["all", "active", "completed"]);
@@ -12,12 +13,21 @@ const STORAGE_KEY = "kavia.todos.v1";
 function App() {
   /** Current filter: "all" | "active" | "completed" */
   const [filter, setFilter] = useState("all");
-  const [todos, setTodos] = useState(() => loadTodos(STORAGE_KEY));
+  const [isLoading, setIsLoading] = useState(true);
+  const [todos, setTodos] = useState([]);
+
+  // Load persisted todos on mount (kept separate from state init to allow a loading state).
+  useEffect(() => {
+    const loaded = loadTodos(STORAGE_KEY);
+    setTodos(loaded);
+    setIsLoading(false);
+  }, []);
 
   // Persist to localStorage whenever todos change.
   useEffect(() => {
+    if (isLoading) return;
     saveTodos(STORAGE_KEY, todos);
-  }, [todos]);
+  }, [todos, isLoading]);
 
   const remainingCount = useMemo(
     () => todos.filter((t) => !t.completed).length,
@@ -29,6 +39,41 @@ function App() {
     if (filter === "completed") return todos.filter((t) => t.completed);
     return todos;
   }, [todos, filter]);
+
+  const emptyState = useMemo(() => {
+    if (isLoading) {
+      return {
+        variant: "loading",
+        title: "Loading your todos…",
+        description: "Getting your saved list ready.",
+      };
+    }
+
+    if (todos.length === 0) {
+      return {
+        variant: "empty",
+        title: "No todos yet",
+        description: 'Add your first task above (e.g., "Buy milk").',
+      };
+    }
+
+    if (visibleTodos.length === 0) {
+      const filterLabel =
+        filter === "active"
+          ? "Active"
+          : filter === "completed"
+          ? "Completed"
+          : "All";
+
+      return {
+        variant: "empty",
+        title: `No ${filterLabel.toLowerCase()} items`,
+        description: "Try another filter or add a new task.",
+      };
+    }
+
+    return null;
+  }, [isLoading, todos.length, visibleTodos.length, filter]);
 
   // PUBLIC_INTERFACE
   const addTodo = (text) => {
@@ -70,7 +115,7 @@ function App() {
           <div className="todoTitleRow">
             <h1 className="todoTitle">Retro Todo</h1>
             <span className="todoBadge" aria-label="Remaining todos">
-              {remainingCount} left
+              {isLoading ? "…" : remainingCount} left
             </span>
           </div>
           <p className="todoSubtitle">
@@ -95,17 +140,17 @@ function App() {
             onDelete={deleteTodo}
           />
 
-          {todos.length === 0 && (
-            <div className="todoEmpty" role="status" aria-live="polite">
-              Your list is empty. Add something fun.
-            </div>
+          {emptyState && (
+            <StatusState
+              variant={emptyState.variant}
+              title={emptyState.title}
+              description={emptyState.description}
+            />
           )}
         </section>
 
         <footer className="todoFooter">
-          <span className="todoFooterHint">
-            Tip: Press Enter to add quickly.
-          </span>
+          <span className="todoFooterHint">Tip: Press Enter to add quickly.</span>
         </footer>
       </main>
     </div>

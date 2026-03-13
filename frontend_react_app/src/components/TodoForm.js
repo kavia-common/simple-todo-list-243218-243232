@@ -56,7 +56,7 @@ function TodoForm({ onAdd }) {
           className={`todoInput ${error ? "hasError" : ""}`}
           value={text}
           onChange={(e) => handleChange(e.target.value)}
-          placeholder="Add a new task…"
+          placeholder='What needs doing? (e.g., "Email Alex")'
           autoComplete="off"
           maxLength={MAX_TODO_LENGTH}
           aria-invalid={error ? "true" : "false"}

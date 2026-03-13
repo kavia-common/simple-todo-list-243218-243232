@@ -261,6 +261,20 @@
   font-family: var(--mono);
 }
 
+.todoStatusTitle {
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.todoStatusDescription {
+  font-size: 12px;
+}
+
+.todoStatus--loading .todoStatusTitle {
+  color: var(--muted);
+}
+
 .todoFooter {
   margin-top: 14px;
   color: var(--muted);
