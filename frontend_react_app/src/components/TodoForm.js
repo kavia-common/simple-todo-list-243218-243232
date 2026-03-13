@@ -18,12 +18,14 @@ function TodoForm({ onAdd }) {
       </label>
       <input
         id="newTodo"
+        type="text"
         className="todoInput"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Add a new task…"
         autoComplete="off"
         maxLength={120}
+        required
       />
       <button className="todoButton" type="submit">
         Add
