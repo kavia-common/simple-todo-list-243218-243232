@@ -4,6 +4,7 @@ import TodoForm from "./components/TodoForm";
 import FilterBar from "./components/FilterBar";
 import TodoList from "./components/TodoList";
 import StatusState from "./components/StatusState";
+import TodoSearch from "./components/TodoSearch";
 import { loadTodos, saveTodos } from "./utils/storage";
 
 const FILTERS = /** @type {const} */ (["all", "active", "completed"]);
@@ -13,6 +14,8 @@ const STORAGE_KEY = "kavia.todos.v1";
 function App() {
   /** Current filter: "all" | "active" | "completed" */
   const [filter, setFilter] = useState("all");
+  /** Simple text query for client-side filtering of visible todos */
+  const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [todos, setTodos] = useState([]);
 
@@ -39,6 +42,12 @@ function App() {
     if (filter === "completed") return todos.filter((t) => t.completed);
     return todos;
   }, [todos, filter]);
+
+  const searchedTodos = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return visibleTodos;
+    return visibleTodos.filter((t) => t.text.toLowerCase().includes(q));
+  }, [visibleTodos, query]);
 
   const emptyState = useMemo(() => {
     if (isLoading) {
@@ -72,8 +81,16 @@ function App() {
       };
     }
 
+    if (searchedTodos.length === 0) {
+      return {
+        variant: "empty",
+        title: "No matches",
+        description: "Try a different search phrase.",
+      };
+    }
+
     return null;
-  }, [isLoading, todos.length, visibleTodos.length, filter]);
+  }, [isLoading, todos.length, visibleTodos.length, searchedTodos.length, filter]);
 
   // PUBLIC_INTERFACE
   const addTodo = (text) => {
@@ -126,6 +143,8 @@ function App() {
         <section className="todoCard" aria-label="Todo app">
           <TodoForm onAdd={addTodo} />
 
+          <TodoSearch value={query} onChange={setQuery} />
+
           <FilterBar
             filters={FILTERS}
             value={filter}
@@ -135,7 +154,7 @@ function App() {
           />
 
           <TodoList
-            todos={visibleTodos}
+            todos={searchedTodos}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
           />
